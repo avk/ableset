@@ -1,3 +1,28 @@
-<h1>home</h1>
+<% unless current_user.invites_in.empty? %>
+<h2>Incoming invites (<%= current_user.invites_in.count %>)</h2>
+<ol>
+  <% current_user.invites_in.each do |invite| %>
+    <li>
+      <%=h invite.full_name %>
+      { 
+        <%= link_to "accept", accept_path(current_user, invite) %>
+        <%= link_to "reject", reject_path(current_user, invite) %>
+      }
+    </li>
+  <% end -%>
+</ol>
+<% end -%>
 
-<%= link_to "Your arsenal", user_skills_path(current_user) %>
+<% unless current_user.invites_out.empty? %>
+<h2>Outgoing invites (<%= current_user.invites_out.count %>)</h2>
+<ol>
+  <% current_user.invites_out.each do |invite| %>
+    <li>
+      <%=h invite.full_name %>
+      { 
+        <%= link_to "revoke", revoke_path(current_user, invite) %>
+      }
+    </li>
+  <% end -%>
+</ol>
+<% end -%>

@@ -5,10 +5,18 @@ ActionController::Routing::Routes.draw do |map|
   map.register '/register', :controller => 'users', :action => 'create'
   map.signup '/signup', :controller => 'users', :action => 'new'
 
-  map.resources :users, :member => {:home => :get} do |user|
+  map.resource :session
+
+  map.resources :users, :member => { :home => :get } do |user|
     user.resources :skills
   end
-  map.resource :session
+  
+  map.friends 'users/:user_id/friends', :controller => 'users', :action => 'friends'
+  map.invite 'users/:user_id/invite/:id', :controller => 'users', :action => 'invite'#, :conditions => { :method => :post }
+  map.accept 'users/:user_id/accept/:id', :controller => 'users', :action => 'accept'#, :conditions => { :method => :put }
+  map.reject 'users/:user_id/reject/:id', :controller => 'users', :action => 'reject'#, :conditions => { :method => :put }
+  map.revoke 'users/:user_id/revoke/:id', :controller => 'users', :action => 'revoke'#, :conditions => { :method => :put }
+  map.unfriend 'users/:user_id/unfriend/:id', :controller => 'users', :action => 'unfriend'#, :conditions => { :method => :delete }
 
   map.root :controller => 'users', :action => 'home'
 

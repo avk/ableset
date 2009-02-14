@@ -63,35 +63,50 @@ class User < ActiveRecord::Base
   def invite(target)
     if self.invites_in.include? target
       Friendship.from_to(target, self).confirm
+      "accepted #{target.full_name}'s invitation to connect"
     elsif self.invites_out.include? target
-      return
+      "already invited #{target.full_name}"
     else
       Friendship.create(:user => self, :friend => target, :approved => false)
+      "invited #{target.full_name} to connect"
     end
   end
   
   def accept_invite_from(source)
     if self.invites_in.include? source
       Friendship.from_to(source, self).confirm
+      "You and #{source.full_name} are now connected"
+    else
+      "#{source.full_name} did not invite you to connect"
     end
   end
   
   def reject_invite_from(source)
     if self.invites_in.include? source
       Friendship.from_to(source, self).reject
+      "You rejected #{source.full_name}'s invitation"
+    else
+      "#{source.full_name} did not invite you to connect"
     end
   end
   
   def revoke_invite_to(target)
     if self.invites_out.include? target
       Friendship.from_to(self, target).revoke
+      "You revoked your invitation to #{target.full_name}"
+    else
+      "You did not invite #{target.full_name} to connect"
     end
   end
   
   def remove_friend(friend)
     friendship = Friendship.from_to(self, friend)
     friendship ||= Friendship.from_to(friend, self)
-    friendship.destroy
+    if friendship.destroy
+      "You and #{friend.full_name} are no longer connected"
+    else
+      "Could not disconnect from #{friend.full_name}"
+    end
   end
   
   

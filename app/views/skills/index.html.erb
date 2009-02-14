@@ -18,4 +18,8 @@
 
 <% if you? %> 
   <%= link_to 'New skill', new_user_skill_path(@user) %>
+<% elsif your_friend? %>
+  <%= link_to "Remove connection", unfriend_path(current_user, @user) %>
+<% else %>
+  <%= link_to "Connect with #{h @user.first_name}", invite_path(current_user, @user) %>
 <% end -%>

@@ -6,6 +6,13 @@
   <title><%= controller.action_name %> - able{set}</title>
   <%= stylesheet_link_tag 'scaffold' %>
   <style type="text/css" media="screen">
+    #wrapper {
+      margin: 0 auto;
+      width: 800px;
+    }
+    #header {
+      margin-bottom: 30px;
+    }
     #footer ul  {
       margin: 0;
       padding-left: 0;
@@ -15,28 +22,39 @@
 </head>
 <body>
 
-<% if flash[:notice] or flash[:error] -%>
-  <p style="color: green"><%= flash[:notice] %></p>
-  <p style="color: red"><%= flash[:error] %></p>
-<% end -%>
-
-<%= render :partial => 'users/user_bar' %>
-
-<%= yield  %>
-
-<hr />
-
-<div id="footer">
-  <ul style="width: 100px; float: left;">
-    <li><%= link_to "Home", root_path %></li>
-    <li><%= link_to "Arsenal", user_skills_path(current_user) %></li>
-    <li>Connections</li>
-  </ul>
+<div id="wrapper">
+  <div id="header">
+    <div style="text-align: right">
+      <%= render :partial => 'users/user_bar' %>
+    </div>
+    <span id="logo" style="font-size: 2em; font-family: Helvetica">
+      <strong>able</strong>{<span style="color: #FF7B00;">set</span>}
+    </span>
   
-  <ul style="width: 100px; margin-left: 110px;">
-    <li><%= link_to "About", root_path %></li>
-    <li><%= link_to "Contact", root_path %></li>
-  </ul>
+  </div>
+
+
+  <% if flash[:notice] or flash[:error] -%>
+    <p style="color: green"><%=h flash[:notice] %></p>
+    <p style="color: red"><%=h flash[:error] %></p>
+  <% end -%>
+
+  <%= yield  %>
+
+  <hr />
+
+  <div id="footer">
+    <ul style="width: 100px; float: left;">
+      <li><%= link_to "Home", root_path %></li>
+      <li><%= link_to "Arsenal", user_skills_path(current_user) %></li>
+      <li><%= link_to "Connections", friends_path(current_user) %></li>
+    </ul>
+  
+    <ul style="width: 100px; margin-left: 110px;">
+      <li><%= link_to "About", root_path %></li>
+      <li><%= link_to "Contact", root_path %></li>
+    </ul>
+  </div>
 </div>
 
 </body>

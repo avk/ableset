@@ -5,5 +5,9 @@ module ApplicationHelper
     @user == current_user
   end
   
+  def your_friend?
+    current_user.friends.include? @user
+  end
+  
 
 end

@@ -1,0 +1,7 @@
+<h1><%=h @user.full_name %>'s Connections</h1>
+
+<ul id="user_<%= @user.id %>_friends">
+<% @friends.each do |friend| %>
+  <li><%= link_to h(friend.full_name), user_skills_path(friend) %></li>
+<% end -%>
+</ul>
