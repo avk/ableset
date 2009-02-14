@@ -88,6 +88,7 @@ class SkillsController < ApplicationController
     end
   end
   
+  
 protected
 
   def get_user

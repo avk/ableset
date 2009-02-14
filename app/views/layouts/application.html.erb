@@ -24,15 +24,20 @@
 
 <div id="wrapper">
   <div id="header">
-    <div style="text-align: right">
+    <div style="text-align: right; margin-bottom: 15px;">
       <%= render :partial => 'users/user_bar' %>
     </div>
-    <span id="logo" style="font-size: 2em; font-family: Helvetica">
-      <strong>able</strong>{<span style="color: #FF7B00;">set</span>}
-    </span>
-  
-  </div>
 
+    <div id="search_form" style="float: right;">
+      <% form_tag :controller => 'search', :action => 'search' do %>
+        <%= text_field_tag :query, '', :size => '80' %>
+        <%= submit_tag ">" %>
+      <% end -%>
+    </div>
+    <div id="logo" style="font-size: 3em; font-family: Helvetica">
+      <strong>able</strong>{<span style="color: #FF7B00;">set</span>}
+    </div>
+  </div>
 
   <% if flash[:notice] or flash[:error] -%>
     <p style="color: green"><%=h flash[:notice] %></p>
