@@ -1,0 +1,21 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  user: two
+  friend: arthur
+  approved: false
+
+two:
+  user: two
+  friend: hubert
+  approved: true
+
+three:
+  user: two
+  friend: one
+  approved: true
+
+four:
+  user: hubert
+  friend: arthur
+  approved: true  

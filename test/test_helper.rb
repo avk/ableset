@@ -34,5 +34,7 @@ class Test::Unit::TestCase
   # -- they do not yet inherit this setting
   fixtures :all
 
+  include AuthenticatedTestHelper
+
   # Add more helper methods to be used by all tests here...
 end

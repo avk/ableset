@@ -32,3 +32,33 @@ old_password_holder:
   created_at:                <%= 1.days.ago.to_s :db %>
 
 
+one:
+  first_name:                one
+  last_name:                 one  
+  email:                     u1@u1.com
+  salt:                      7e3041ebc2fc05a40c60028e2c4901a81035d3cd
+  crypted_password:          00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+
+two:
+  first_name:                two
+  last_name:                 two
+  email:                     u2@u2.com
+  salt:                      7e3041ebc2fc05a40c60028e2c4901a81035d3cd
+  crypted_password:          00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+
+
+arthur:
+  first_name:                Arthur
+  last_name:                 Klepchukov
+  email:                     avk@berkeley.edu
+  salt:                      7e3041ebc2fc05a40c60028e2c4901a81035d3cd
+  crypted_password:          00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+  
+  
+hubert:
+  first_name:                Hubert
+  last_name:                 Wong  
+  email:                     hube@hubeify.com
+  salt:                      7e3041ebc2fc05a40c60028e2c4901a81035d3cd
+  crypted_password:          00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+

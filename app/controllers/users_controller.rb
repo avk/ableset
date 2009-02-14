@@ -1,5 +1,8 @@
 class UsersController < ApplicationController  
 
+  def home
+  end  
+
   # render new.rhtml
   def new
     @user = User.new
@@ -23,8 +26,6 @@ class UsersController < ApplicationController
     end
   end
   
-  def home
-    
-  end  
+  
   
 end

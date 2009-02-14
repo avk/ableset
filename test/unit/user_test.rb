@@ -1,10 +1,12 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class UserTest < ActiveSupport::TestCase
-  # Be sure to include AuthenticatedTestHelper in test/test_helper.rb instead.
-  # Then, you can remove it from this and the functional test.
-  include AuthenticatedTestHelper
-  fixtures :users
+
+  def setup
+    @hubert, @avk = users(:hubert), users(:arthur)
+    @one, @two = users(:one), users(:two)
+  end
+
 
   def test_should_create_user
     assert_difference 'User.count' do
@@ -87,10 +89,135 @@ class UserTest < ActiveSupport::TestCase
     assert users(:quentin).remember_token_expires_at.between?(before, after)
   end
 
+  
+  
+  ##### invite creation
+  
+  def test_inviting_yourself_as_a_friend
+    @hubert.invite @hubert
+    assert !(@hubert.invites_out(true).include? @hubert)
+    assert !(@hubert.invites_in(true).include? @hubert)
+    assert !(friends? @hubert, @hubert)
+  end
+  
+  def test_inviting_an_existing_friend
+    assert (friends? @hubert, @avk)
+    @hubert.invite @avk
+    assert !(@hubert.invites_out(true).include? @avk)
+    assert !(@hubert.invites_in(true).include? @avk)
+  end
+  
+  def test_inviting_someone_who_has_invited_you
+    assert (@two.invites_out.include? @avk)
+    @avk.invite @two
+    assert (friends? @avk, @two)
+  end
+  
+  def test_inviting_someone_you_have_no_previous_connection_to
+    assert (no_relationship? @one, @hubert)
+    @one.invite @hubert
+    assert (@one.invites_out(true).include? @hubert)
+    assert (@hubert.invites_in(true).include? @one)
+  end
+  
+  def test_against_duplicate_invites
+    assert (no_relationship? @one, @hubert)
+    outgoing = @one.invites_out.size
+    incoming = @hubert.invites_in.size
+    @one.invite @hubert
+    @one.invite @hubert
+    assert_equal outgoing + 1, @one.invites_out(true).size
+    assert_equal incoming + 1, @hubert.invites_in(true).size
+  end
+  
+  ##### invite modification
+  
+  def test_invite_creation
+    assert no_relationship? users(:quentin), users(:aaron)
+    users(:quentin).invite(users(:aaron))
+    users(:quentin).reload
+    assert users(:quentin).invites_out.include? users(:aaron)
+  end
+  
+  def test_inviting_yourself
+    assert no_relationship? users(:quentin), users(:quentin)
+    users(:quentin).invite(users(:quentin))
+    users(:quentin).reload
+    assert !(users(:quentin).invites_out.include? users(:quentin))
+  end
+  
+  def test_invite_acceptance
+    assert (@two.invites_out.include? @avk)
+    @avk.accept_invite_from(@two)
+    assert (friends? @avk, @two)
+  end
+  
+  def test_invite_rejection
+    assert (@two.invites_out.include? @avk)
+    @avk.reject_invite_from(@two)
+    assert (no_relationship? @avk, @two)
+  end
+  
+  def test_revoking_an_invite
+    assert (@two.invites_out.include? @avk)
+    @two.revoke_invite_to(@avk)
+    assert (no_relationship? @two, @avk)
+  end
+  
+  def test_invite_modification_from_nonexistant_invite
+    assert (no_relationship? @one, @hubert)
+    @one.accept_invite_from @hubert
+    @one.reject_invite_from @hubert
+    @hubert.revoke_invite_to @one
+    assert (no_relationship? @one, @hubert)
+  end  
+    
+  ##### friend modification
+  
+  def test_removing_a_friend
+    ## from one direction    
+    assert (friends? @two, @hubert)
+    @two.remove_friend @hubert
+    assert (no_relationship? @two, @hubert)
+    
+    ## from the other direction
+    @hubert.invite @two
+    @two.reload; @hubert.reload
+    @two.accept_invite_from @hubert
+    @two.reload; @hubert.reload
+    assert (friends? @two, @hubert)
+    @hubert.remove_friend @two
+    @two.reload; @hubert.reload
+    assert (no_relationship? @two, @hubert)
+  end
+  
+  
+
 protected
   def create_user(options = {})
     record = User.new({ :first_name => 'Quire', :last_name => 'Es', :email => 'quire@example.com', :password => 'quire69', :password_confirmation => 'quire69' }.merge(options))
     record.save
     record
   end
+  
+  def friends?(u1, u2)
+    (u1.friends.include? u2) and (u2.friends.include? u1)
+  end
+  
+  def invite_exists?(u1, u2)
+    if (u1.invites_in(true).include? u2) or (u1.invites_out(true).include? u2)
+      return true
+    else
+      return false
+    end
+  end
+  
+  def no_relationship?(u1, u2)
+    if (friends? u1, u2) or (invite_exists? u1, u2)
+      return false
+    else
+      return true
+    end
+  end
+
 end
