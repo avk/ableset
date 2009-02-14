@@ -5,6 +5,13 @@
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title><%= controller.action_name %> - able{set}</title>
   <%= stylesheet_link_tag 'scaffold' %>
+  <style type="text/css" media="screen">
+    #footer ul  {
+      margin: 0;
+      padding-left: 0;
+      list-style: none;
+    }
+  </style>
 </head>
 <body>
 
@@ -16,6 +23,21 @@
 <%= render :partial => 'users/user_bar' %>
 
 <%= yield  %>
+
+<hr />
+
+<div id="footer">
+  <ul style="width: 100px; float: left;">
+    <li><%= link_to "Home", root_path %></li>
+    <li><%= link_to "Arsenal", user_skills_path(current_user) %></li>
+    <li>Connections</li>
+  </ul>
+  
+  <ul style="width: 100px; margin-left: 110px;">
+    <li><%= link_to "About", root_path %></li>
+    <li><%= link_to "Contact", root_path %></li>
+  </ul>
+</div>
 
 </body>
 </html>

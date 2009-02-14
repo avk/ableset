@@ -4,5 +4,6 @@
 </p>
 
 
-<%= link_to 'Edit', edit_user_skill_path(current_user, @skill) %> |
-<%= link_to 'Back', user_skills_path(current_user) %>
+<% if you? %>
+  <%= link_to 'Edit', edit_user_skill_path(@user, @skill) %>
+<% end -%>

@@ -1,11 +1,12 @@
 class SkillsController < ApplicationController
   
   before_filter :login_required, :except => [:index, :show]
+  before_filter :get_user, :only => [:index, :show]
   
   # GET /users/1/skills
   # GET /users/1/skills.xml
   def index
-    @skills = current_user.skills
+    @skills = @user.skills
 
     respond_to do |format|
       format.html # index.html.erb
@@ -16,7 +17,7 @@ class SkillsController < ApplicationController
   # GET /users/1/skills/1
   # GET /users/1/skills/1.xml
   def show
-    @skill = current_user.skills.find(params[:id])
+    @skill = @user.skills.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -37,7 +38,7 @@ class SkillsController < ApplicationController
 
   # GET /users/1/skills/1/edit
   def edit
-    @skill = Skill.find(params[:id])
+    @skill = current_user.skills.find(params[:id])
   end
 
   # POST /users/1/skills
@@ -86,4 +87,11 @@ class SkillsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+protected
+
+  def get_user
+    @user = (params[:user_id] == current_user.id) ? current_user : User.find(params[:user_id])
+  end
+
 end

@@ -1,17 +1,21 @@
-<h1><%= h current_user.full_name %>'s skills</h1>
+<h1><%= h @user.full_name %>'s skills</h1>
 
-<ul id="user_<%= current_user %>_skills">
+<ul id="user_<%= @user.id %>_skills">
 <% @skills.each do |skill| %>
   <li>
-  <%= link_to h(skill.name), user_skill_path(current_user, skill) %> 
+  <%= link_to h(skill.name), user_skill_path(@user, skill) %> 
+    <% if you? %>
     { 
-      <%= link_to 'edit', edit_user_skill_path(current_user, skill) %>
-      <%= link_to 'destroy', user_skill_path(current_user, skill), :confirm => 'Are you sure?', :method => :delete %>
+      <%= link_to 'edit', edit_user_skill_path(@user, skill) %>
+      <%= link_to 'destroy', user_skill_path(@user, skill), :confirm => 'Are you sure?', :method => :delete %>
     }
+    <% end -%>
   </li>
 <% end %>
 </ul>
 
 <br />
 
-<%= link_to 'New skill', new_user_skill_path(current_user) %>
+<% if you? %> 
+  <%= link_to 'New skill', new_user_skill_path(@user) %>
+<% end -%>
