@@ -3,6 +3,8 @@ class UsersController < ApplicationController
   before_filter :login_required, :except => [:home, :new, :create]
   before_filter :get_target, :only => [:invite, :accept, :reject, :revoke, :unfriend]
 
+  auto_complete_for :user, :last_name
+
   def home
     if logged_in?
       
@@ -68,6 +70,7 @@ class UsersController < ApplicationController
     flash[:notice] = current_user.remove_friend(@target)
     redirect_to home_user_path(current_user)
   end
+  
   
 protected
 

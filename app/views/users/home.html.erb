@@ -3,7 +3,7 @@
 <ol>
   <% current_user.invites_in.each do |invite| %>
     <li>
-      <%=h invite.full_name %>
+      <%=link_to h(invite.full_name), user_skills_path(invite) %>
       { 
         <%= link_to "accept", accept_path(current_user, invite) %>
         <%= link_to "reject", reject_path(current_user, invite) %>
@@ -18,7 +18,7 @@
 <ol>
   <% current_user.invites_out.each do |invite| %>
     <li>
-      <%=h invite.full_name %>
+      <%=link_to h(invite.full_name), user_skills_path(invite) %>
       { 
         <%= link_to "revoke", revoke_path(current_user, invite) %>
       }
@@ -26,3 +26,43 @@
   <% end -%>
 </ol>
 <% end -%>
+
+
+<table id="team_matrix" border="0" cellspacing="5" cellpadding="5" style="border: 1px solid #333; width: 100%">
+  <tr style="background-color: #efefef;">
+    <th id="team_person_search" style="background-color: white; color: #FF7B00; border: 1px solid #FF7B00;">
+      build a team
+    </th>
+    <th>
+      <!--  -->
+      <% form_remote_tag :url => { :controller => 'search', :action => 'person' } do %>
+        person<br />
+        <%= text_field_with_auto_complete :user, :last_name, { :size => "20" }, 
+          { :after_update_element => "function(el, value) {
+              $('new_team_user_id').value = value.id.replace(/user_id_/i, '');
+            }" } %>
+        <%= hidden_field_tag :new_team_user_id, '0' %>
+        <%= hidden_field_tag :team_size, '0', :class => 'team_counter' %>
+        <select name="existing_skills[]" id="existing_skills" multiple="multiple" style="display:none;"></select>
+        <%= submit_tag '+', :onclick => '
+            $$("td.team_skill_name").each( function(value, index) { 
+              $("existing_skills").insert("<option selected=\"selected\" value=\"" + value.id.match(/team_skill_id_(\d+)/i)[1] + "\"></option>");
+            });
+          ' %>
+      <% end -%>
+    </th>
+  </tr>
+  <tr id="team_skill_search">
+    <td>
+      <%# form_remote_tag :url => { :controller => 'search', :action => 'search' } do %>
+        <%#= hidden_field_tag :team_size, '0' %>
+        <!-- <strong>skill:</strong> -->
+        <%#= text_field_tag :query, '', :size => '20' %>
+        <%#= submit_tag '+' %>
+      <%# end %>
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+</table>

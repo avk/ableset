@@ -1,1 +1,24 @@
-<h1>Marketing BS</h1>
+<h1>Welcome!</h1>
+
+<div id="thepitch">
+Discover what the people <h4>around you</h4> are <h3>good</h3> at. Evaluate the <h2>strengths</h2> and weaknesses of teams. Search across your network to find the skilled individual you need. This is <strong>able{set}</strong>. You <h5>are</h5> <h4>what</h4> <h3>you're</h3> <h1>good</h1> <h2>at</h2>.
+</div>
+
+<div class="cta">
+  <h1><%= link_to "Join now", signup_path, :class => 'cta', :style => 'padding: 10px 0 0 10px; margin-left: 615px; height: 30px; width: 140px; color: #ff7b00; border: 3px dashed #ff7b00; display: block; text-decoration: none;' %></h1>
+</div>
+
+<br /><br />
+<fieldset id="login_form" style="width: 250px; margin: 0 auto; padding: 0 50px; background-color: #efefef;">
+  <legend><strong>Log In</strong></legend>
+
+  <% form_tag session_path do -%>
+  <%= label_tag 'email', 'email', :style => 'float: left; width: 75px' %><%= text_field_tag 'email', @email %><br />
+  <%= label_tag 'password', 'password', :style => 'float: left; width: 75px' %><%= password_field_tag 'password', nil %>
+  <br />
+  <%= label_tag 'remember_me', 'Remember me' %>
+  <%= check_box_tag 'remember_me', '1', @remember_me %>
+
+  <%= submit_tag 'Log in' %>
+  <% end -%>
+</fieldset>

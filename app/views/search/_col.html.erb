@@ -1,0 +1,9 @@
+<tr>
+  <td class="team_skill_name" id="team_skill_id_<%= skill.id %>">
+    <%=link_to h(skill.name), :controller => :search, :action => :search, :query => skill.name %>
+  </td>
+  <td><div style="width:43px; margin: 0 auto;"><%= image_tag 'checkmark.png' %></div></td>
+  <% @team_size.times do %>
+    <td></td>
+  <% end -%>
+</tr>

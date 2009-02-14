@@ -5,6 +5,7 @@
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title><%= controller.action_name %> - able{set}</title>
   <%= stylesheet_link_tag 'scaffold' %>
+  <%= javascript_include_tag :defaults %>
   <style type="text/css" media="screen">
     #wrapper {
       margin: 0 auto;
@@ -13,10 +14,55 @@
     #header {
       margin-bottom: 30px;
     }
+    #content {
+      padding: 15px;
+      background: white url(/images/bodybg.png) repeat-x;
+      min-height: 200px;
+    }
+    #footer {
+      background: white url(/images/curvedfooter.png) no-repeat;
+      min-height: 200px;
+      padding: 15px;
+    }
     #footer ul  {
-      margin: 0;
+      margin-top: 20px 0 0 0;
       padding-left: 0;
-      list-style: none;
+      list-style-type: none;
+    }
+    #footer a, #footer a:link {
+      color: #333;
+      text-decoration: none;
+      border-bottom: 1px dashed #333;
+    }
+    #footer a:hover {
+      color: #000;
+      border-bottom: 1px solid #000;
+    }
+    ul, ol {
+      list-style-type: circle;
+    }
+    #thepitch {
+      float: left;
+      width: 600px;
+    }
+    #thepitch h1, 
+    #thepitch h2,
+    #thepitch h3,
+    #thepitch h4,
+    #thepitch h5,
+    #thepitch h6 {
+      display: inline;
+    }
+    fieldset {
+      border-left: 2px solid #ff7b00;
+      border-right: 2px solid #ff7b00;
+    }
+    legend {
+      font-weight: bold;
+      font-style: italic;
+    }
+    a.cta:hover {
+      color: white;
     }
   </style>
 </head>
@@ -39,20 +85,25 @@
     </div>
   </div>
 
-  <% if flash[:notice] or flash[:error] -%>
-    <p style="color: green"><%=h flash[:notice] %></p>
-    <p style="color: red"><%=h flash[:error] %></p>
-  <% end -%>
+  <div id="content">
+    <% if flash[:notice] or flash[:error] -%>
+      <p style="padding: 5px; color: #ff7b00; font-weight: bold;"><%=h flash[:notice] %></p>
+      <p style="color: red; font-weight: bold"><%=h flash[:error] %></p>
+    <% end -%>
 
-  <%= yield  %>
-
-  <hr />
+    <%= yield  %>
+  </div>
 
   <div id="footer">
     <ul style="width: 100px; float: left;">
       <li><%= link_to "Home", root_path %></li>
-      <li><%= link_to "Arsenal", user_skills_path(current_user) %></li>
-      <li><%= link_to "Connections", friends_path(current_user) %></li>
+      <% if logged_in? %>
+        <li><%= link_to "Arsenal", user_skills_path(current_user) %></li>
+        <li><%= link_to "Connections", friends_path(current_user) %></li>
+      <% else %>
+        <li>Arsenal</li>
+        <li>Connections</li>
+      <% end -%>
     </ul>
   
     <ul style="width: 100px; margin-left: 110px;">
