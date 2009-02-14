@@ -1,0 +1,17 @@
+<h1><%= h current_user.full_name %>'s skills</h1>
+
+<ul id="user_<%= current_user %>_skills">
+<% @skills.each do |skill| %>
+  <li>
+  <%= link_to h(skill.name), user_skill_path(current_user, skill) %> 
+    { 
+      <%= link_to 'edit', edit_user_skill_path(current_user, skill) %>
+      <%= link_to 'destroy', user_skill_path(current_user, skill), :confirm => 'Are you sure?', :method => :delete %>
+    }
+  </li>
+<% end %>
+</ul>
+
+<br />
+
+<%= link_to 'New skill', new_user_skill_path(current_user) %>
