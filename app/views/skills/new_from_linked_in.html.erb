@@ -10,4 +10,17 @@ from <%= link_to @public_profile, @public_profile %>
     <li><%=h skill %></li>
   <% end -%>
   </ol>
+  
+  <ol>
+  <% form_tag create_from_linked_in_user_skills_path(current_user) do %>
+    <%- @skills.each do |skill| -%>
+      <li>
+        <input type="text" name="new_skills[]" value="<%=h skill %>" />
+        <a style="padding-left: 20px; text-decoration: none;" 
+           href="#" onclick="this.parentNode.remove();">(x)</a>
+      </li>
+    <% end -%>
+    <%= submit_tag "Add Skills" %>
+  <% end -%>
+  </ol>
 <%- end -%>

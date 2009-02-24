@@ -108,7 +108,19 @@ class SkillsController < ApplicationController
   end
   
   def create_from_linked_in
+    saved, not_saved = [], []
+    params[:new_skills].each do |skill|
+      if current_user.skills << Skill.new(:name => skill)
+        saved << skill
+      else
+        not_saved << skill
+      end
+    end
     
+    flash[:notice] = "Skills saved: " + saved.join(', ') unless saved.empty?
+    flash[:notice] = "Not saved: " + not_saved.join(', ') unless not_saved.empty?
+    
+    redirect_to user_skills_path(current_user)
   end
   
   
