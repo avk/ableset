@@ -30,16 +30,7 @@ class Skill < ActiveRecord::Base
   
   def self.parse_skills(html)
     # break up HTML into logical array items
-    skills = html.gsub(/\n/, '').split(/<br>|<br \/>/)
-    
-    # split up skills which might be a list
-    skills.each do |skill|
-      multiple = skill.split(/,|\+/)
-      if (multiple.size > 1)
-        skills.delete(skill)
-        multiple.each { |single| skills << single }
-      end
-    end
+    skills = html.gsub(/\n/, '').split(/,|\+|<br>|<br \/>/)
     
     # parse out individual skills
     skills.map! do |skill|
@@ -59,10 +50,6 @@ class Skill < ActiveRecord::Base
     skills.map! do |skill|
       skill.match(entities) ? skill.gsub($1, html_ents[$1]) : skill
     end
-
-    # TODO:
-    # parse based on sentences? 
-    #   http://www.linkedin.com/in/brianascher
   end
 
 end
