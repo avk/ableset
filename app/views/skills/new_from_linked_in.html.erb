@@ -6,12 +6,6 @@ from <%= link_to @public_profile, @public_profile %>
   <em>Couldn't fetch any skills</em>
 <%- else -%>
   <ol>
-  <% @skills.each do |skill| -%>
-    <li><%=h skill %></li>
-  <% end -%>
-  </ol>
-  
-  <ol>
   <% form_tag create_from_linked_in_user_skills_path(current_user) do %>
     <%- @skills.each do |skill| -%>
       <li>
