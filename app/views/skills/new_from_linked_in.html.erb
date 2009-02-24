@@ -1,0 +1,15 @@
+<h1>Your LinkedIn skills</h1>
+  <% unless @public_profile.nil? -%>
+    from <%= link_to @public_profile, @public_profile %>
+  <% end -%>
+<hr />
+
+<%- if @skills.nil? or @skills.empty? -%>
+  <em>Couldn't fetch any skills</em>
+<%- else -%>
+  <ol>
+  <% @skills.each do |skill| -%>
+    <li><%=h skill %></li>
+  <% end -%>
+  </ol>
+<%- end -%>
