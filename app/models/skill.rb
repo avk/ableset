@@ -3,22 +3,33 @@ class Skill < ActiveRecord::Base
   belongs_to :user
 
   def self.from_linked_in_profile(url)
-    # unless url.match(URI.regexp) and $4.to_s.match /\.linkedin\.com/
+    # validate as LinkedIn URL
     uri = URI.parse(url)
-    unless 
+    unless
         !uri.scheme.nil? and 
         !uri.host.nil? and 
         uri.scheme.match /http/ and 
         uri.host.match /\.?linkedin\.com/
       raise ArgumentError, "Invalid LinkedIn URL"
     end
-
+    
+    # fetch the public profile data
     doc = open(url) { |f| Hpricot(f) }
     summary_skills = (doc/'#summary .skills')
-    return ['', []] if summary_skills.first.nil?
+    interest_skills = (doc/'#additional-information .interests')
     
+    return [] if summary_skills.first.nil? and interest_skills.first.nil?
+    
+    # parse and compile the skills
+    all_skills = []
+    [summary_skills, interest_skills].each do |items|
+      all_skills |= self.parse_skills items.inner_html
+    end
+    all_skills
+  end
+  
+  def self.parse_skills(html)
     # break up HTML into logical array items
-    html = summary_skills.inner_html
     skills = html.gsub(/\n/, '').split(/<br>|<br \/>/)
     
     # split up skills which might be a list
@@ -48,14 +59,10 @@ class Skill < ActiveRecord::Base
     skills.map! do |skill|
       skill.match(entities) ? skill.gsub($1, html_ents[$1]) : skill
     end
-    
-    return skills
 
     # TODO:
     # parse based on sentences? 
     #   http://www.linkedin.com/in/brianascher
-    # also: (doc/'#additional-information .interests')
-    #   http://www.linkedin.com/in/arthurk
   end
 
 end
