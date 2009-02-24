@@ -1,7 +1,5 @@
 <h1>Your LinkedIn skills</h1>
-  <% unless @public_profile.nil? -%>
-    from <%= link_to @public_profile, @public_profile %>
-  <% end -%>
+from <%= link_to @public_profile, @public_profile %>
 <hr />
 
 <%- if @skills.nil? or @skills.empty? -%>

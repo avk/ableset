@@ -97,7 +97,7 @@ class SkillsController < ApplicationController
       @skills = Skill.from_linked_in_profile(@public_profile)
     rescue ArgumentError => invalid_url
       flash[:error] = invalid_url.message + ": " + @public_profile
-      @public_profile = nil
+      redirect_to :back
     end
     
     # TODO:
