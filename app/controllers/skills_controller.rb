@@ -110,7 +110,7 @@ class SkillsController < ApplicationController
   def create_from_linked_in
     saved, not_saved = [], []
     params[:new_skills].each do |skill|
-      if current_user.skills << Skill.new(:name => skill)
+      if current_user.skills << Skill.new(:name => skill, :source => 'linkedin')
         saved << skill
       else
         not_saved << skill
