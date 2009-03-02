@@ -1,5 +1,7 @@
 <h1><%= h @user.full_name %>'s skills</h1>
 
+<%= linked_in_profile_widget(@user) %>
+
 <% if you? %> 
   <%= link_to 'New skill', new_user_skill_path(@user) %>
 <% elsif your_friend? %>

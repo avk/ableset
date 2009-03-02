@@ -15,6 +15,7 @@ from <%= link_to @public_profile, @public_profile %>
       </li>
     <% end -%>
     <br />
+    <%= hidden_field_tag 'public_profile', @public_profile %>
     <%= submit_tag "Add Skills" %>
     <%= link_to 'Cancel', user_skills_path(current_user), :style => "padding-left: 37px;" %>
   <% end -%>

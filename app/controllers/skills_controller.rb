@@ -117,6 +117,11 @@ class SkillsController < ApplicationController
       end
     end
     
+    unless saved.empty?
+      current_user.linked_in_public_profile = params[:public_profile]
+      current_user.save
+    end
+    
     flash[:notice] = "Skills saved: " + saved.join(', ') unless saved.empty?
     flash[:notice] = "Not saved: " + not_saved.join(', ') unless not_saved.empty?
     
