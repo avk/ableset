@@ -36,5 +36,13 @@ class Test::Unit::TestCase
 
   include AuthenticatedTestHelper
 
-  # Add more helper methods to be used by all tests here...
+  def valid_options_for_skill
+    valid_user = users(:quentin)
+    { :name => 'Ruby', :user => valid_user }
+  end
+
+  def create_skill(options={})
+    Skill.create(valid_options_for_skill.merge(options))
+  end
+
 end

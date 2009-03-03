@@ -5,6 +5,9 @@ class Skill < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => [:user_id]
 
+  validates_presence_of :user_id
+  validates_associated :user
+
   def self.from_linked_in_profile(url)
     # validate as LinkedIn URL
     uri = URI.parse(url)
