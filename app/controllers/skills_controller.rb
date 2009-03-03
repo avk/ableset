@@ -1,3 +1,6 @@
+require 'open-uri'
+require 'hpricot'
+
 class SkillsController < ApplicationController
   
   before_filter :login_required, :except => [:index, :show]
@@ -86,6 +89,43 @@ class SkillsController < ApplicationController
       format.html { redirect_to(user_skills_path(current_user)) }
       format.xml  { head :ok }
     end
+  end
+  
+  def new_from_linked_in    
+    begin
+      @public_profile = params[:public_profile]
+      @skills = Skill.from_linked_in_profile(@public_profile)
+    rescue ArgumentError => invalid_url
+      flash[:error] = invalid_url.message + ": " + @public_profile
+      redirect_to :back
+    end
+    
+    # TODO:
+    # if we can't grab any skills from the public profile:
+    # - give them the option to log in to LinkedIn
+    # - Mechanize to viewProfile page
+    # - grab (doc/'.content .null') and (doc/'#interests')    
+  end
+  
+  def create_from_linked_in
+    saved, not_saved = [], []
+    params[:new_skills].each do |skill|
+      if current_user.skills << Skill.new(:name => skill, :source => 'linkedin')
+        saved << skill
+      else
+        not_saved << skill
+      end
+    end
+    
+    unless saved.empty?
+      current_user.linked_in_public_profile = params[:public_profile]
+      current_user.save
+    end
+    
+    flash[:notice] = "Skills saved: " + saved.join(', ') unless saved.empty?
+    flash[:notice] = "Not saved: " + not_saved.join(', ') unless not_saved.empty?
+    
+    redirect_to user_skills_path(current_user)
   end
   
   

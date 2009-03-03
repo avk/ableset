@@ -8,7 +8,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resource :session
 
   map.resources :users, :member => { :home => :get } do |user|
-    user.resources :skills
+    user.resources :skills, :collection => { :new_from_linked_in => :post, :create_from_linked_in => :post }
   end
   
   map.friends 'users/:user_id/friends', :controller => 'users', :action => 'friends'

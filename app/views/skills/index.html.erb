@@ -1,5 +1,15 @@
 <h1><%= h @user.full_name %>'s skills</h1>
 
+<%= linked_in_profile_widget(@user) %>
+
+<% if you? %> 
+  <%= link_to 'New skill', new_user_skill_path(@user) %>
+<% elsif your_friend? %>
+  <%= link_to "Remove connection", unfriend_path(current_user, @user) %>
+<% else %>
+  <%= link_to "Connect with #{h @user.first_name}", invite_path(current_user, @user) %>
+<% end -%>
+
 <ul id="user_<%= @user.id %>_skills">
 <% @skills.each do |skill| %>
   <li>
@@ -17,10 +27,11 @@
 
 <br />
 
-<% if you? %> 
-  <%= link_to 'New skill', new_user_skill_path(@user) %>
-<% elsif your_friend? %>
-  <%= link_to "Remove connection", unfriend_path(current_user, @user) %>
-<% else %>
-  <%= link_to "Connect with #{h @user.first_name}", invite_path(current_user, @user) %>
+<% if you? %>
+  <h2>Import skills from LinkedIn</h2>
+  <% form_tag new_from_linked_in_user_skills_path(@user) do %>
+    <%= label_tag 'public_profile', 'Your <strong>public profile</strong> URL:' %><br />
+    <%= text_field_tag :public_profile, '', :size => 50 %><br />
+    <%= submit_tag "Import" %>
+  <% end -%>
 <% end -%>
