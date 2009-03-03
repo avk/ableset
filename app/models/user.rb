@@ -56,8 +56,7 @@ class User < ActiveRecord::Base
   def friends
     User.find_by_sql(["SELECT users.* FROM users INNER JOIN friendships 
                        WHERE ((user_id = ? AND users.id = friend_id) 
-                       OR (friend_id = ? AND users.id = user_id)) 
-                       AND approved = ?;", self, self, true])
+                       OR (friend_id = ? AND users.id = user_id)) AND approved = ?;", self, self, true])
   end
   
   def invite(target)
@@ -102,14 +101,11 @@ class User < ActiveRecord::Base
   def remove_friend(friend)
     friendship = Friendship.from_to(self, friend)
     friendship ||= Friendship.from_to(friend, self)
-    if friendship.destroy
+    if friendship and friendship.destroy
       "You and #{friend.full_name} are no longer connected"
     else
       "Could not disconnect from #{friend.full_name}"
     end
   end
-  
-  
-
 
 end

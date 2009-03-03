@@ -5,6 +5,7 @@ class UserTest < ActiveSupport::TestCase
   def setup
     @hubert, @avk = users(:hubert), users(:arthur)
     @one, @two = users(:one), users(:two)
+    @quentin, @aaron = users(:quentin), users(:aaron)
   end
 
 
@@ -146,6 +147,17 @@ class UserTest < ActiveSupport::TestCase
     assert !(users(:quentin).invites_out.include? users(:quentin))
   end
   
+  def test_should_not_invite_twice
+    assert no_relationship? @quentin, @aaron
+    assert_difference "Friendship.count", 1 do
+      @quentin.invite @aaron
+      assert @quentin.reload.invites_out.include? @aaron
+      @quentin.invite @aaron
+      assert @quentin.reload.invites_out.include? @aaron
+    end
+  end
+  
+  
   def test_invite_acceptance
     assert (@two.invites_out.include? @avk)
     @avk.accept_invite_from(@two)
@@ -189,6 +201,25 @@ class UserTest < ActiveSupport::TestCase
     @hubert.remove_friend @two
     @two.reload; @hubert.reload
     assert (no_relationship? @two, @hubert)
+  end
+  
+  def test_removing_a_non_friend
+    assert !(friends? @quentin, @aaron)
+    assert_no_difference "Friendship.count" do
+      @quentin.remove_friend @aaron
+    end
+  end
+  
+  # user skills
+  
+  def test_should_delete_skills_when_user_is_deleted
+    assert_no_difference "Skill.count" do
+      u = create_user
+      ["Ruby", "Rails", "Python", "Django"].each do |skill_name|
+        u.skills << Skill.new(:name => skill_name)
+      end
+      u.destroy
+    end
   end
   
   
