@@ -11,8 +11,7 @@ class Skill < ActiveRecord::Base
   def self.from_linked_in_profile(url)
     # validate as LinkedIn URL
     uri = URI.parse(url)
-    unless
-        !uri.scheme.nil? and 
+    unless !uri.scheme.nil? and 
         !uri.host.nil? and 
         uri.scheme.match /http/ and 
         uri.host.match /\.?linkedin\.com/
