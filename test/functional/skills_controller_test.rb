@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'my_enumerable'
 
 class SkillsControllerTest < ActionController::TestCase
 
@@ -32,7 +33,7 @@ class SkillsControllerTest < ActionController::TestCase
 
   test "should not create skill if not logged in" do
     assert_no_difference('Skill.count') do
-      post :create, :skill => valid_options_for_skill.merge({:name => 'Perl'}), :user_id => @user.id
+      post :create, :skills => 'Perl', :user_id => @user.id
     end
 
     assert_redirected_to new_session_path
@@ -41,18 +42,47 @@ class SkillsControllerTest < ActionController::TestCase
   test "should create skill only if logged in" do
     login_as @name
     assert_difference('Skill.count') do
-      post :create, :skill => valid_options_for_skill.merge({:name => 'Perl'}), :user_id => @user.id
+      post :create, :skills => 'Perl', :user_id => @user.id
     end
 
     assert_redirected_to user_skills_path(@user)
   end
   
-  test "should redirect back to new if create failed" do
+  test "should be able to create multiple skills from a comma-separated list" do
     login_as @name
-    assert_no_difference "Skill.count" do
-      post :create, :skill => { :name => '' }, :user_id => @user.id
+    skills = ['drawing', 'painting', 'graphic design', 'chatting it up at the art murmur']
+    assert_difference "Skill.count", skills.size do
+      post :create, :skills => skills.join(', '), :user_id => @user.id
+    end
+    
+    assert_redirected_to user_skills_path(@user)
+    assert flash[:notice].match Regexp.new(skills.join(', '))
+  end
+  
+  test "should create only valid skills if given a mix of new valid and invalid skills" do
+    login_as @name
+    skills = ['drawing', 'drawing', 'painting', 'visual design']
+    assert_difference "Skill.count", skills.uniq.size do
+      post :create, :skills => skills.join(', '), :user_id => @user.id
+    end
+    
+    assert_redirected_to user_skills_path(@user)
+    assert flash[:notice].match Regexp.new(skills.uniq.join(', '))
+    assert flash[:warning].match Regexp.new(skills.dups.join(', '))
+  end
+  
+  test "should redirect back to new if not able to create any new skills" do
+    login_as @name
+    duplicates = %w(Jython Nylon Neptune Skyler)
+    assert_difference "Skill.count", duplicates.size do
+      duplicates.each do |dup|
+        create_skill(:name => dup, :user => @user)
+      end
+      post :create, :skills => duplicates.join(', '), :user_id => @user.id
     end
     assert_template 'new'
+    assert flash[:error].match Regexp.new(duplicates.join(', '))
+    assert assigns(:unsaved_skills) == duplicates
   end
 
   test "should not be able to edit skills if not logged in" do

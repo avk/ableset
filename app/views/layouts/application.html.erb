@@ -87,9 +87,14 @@
   </div>
 
   <div id="content">
-    <% if flash[:notice] or flash[:error] -%>
-      <p style="padding: 5px; color: #ff7b00; font-weight: bold;"><%=h flash[:notice] %></p>
-      <p style="color: red; font-weight: bold"><%=h flash[:error] %></p>
+    <% if flash[:notice] -%>
+      <p style="color: green; background-color: #66FF55, border: 1px solid green; padding: 3px; font-weight: bold;"><%=h flash[:notice] %></p>
+    <% end -%>
+    <% if flash[:warning] -%>
+      <p style="color: #F60; background-color: #FFEE99, border: 1px solid orange; padding: 3px; font-weight: bold;"><%= h flash[:warning] %></p>
+    <% end -%>
+    <% if flash[:error] -%>
+      <p style="color: red; background-color: #FFAA99; border: 1px solid red; padding: 3px; font-weight: bold"><%=h flash[:error] %></p>
     <% end -%>
 
     <%= yield  %>

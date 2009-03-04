@@ -31,7 +31,7 @@ class SkillsController < ApplicationController
   # GET /users/1/skills/new
   # GET /users/1/skills/new.xml
   def new
-    @skill = current_user.skills.new
+    @unsaved_skills = []
 
     respond_to do |format|
       format.html # new.html.erb
@@ -47,16 +47,29 @@ class SkillsController < ApplicationController
   # POST /users/1/skills
   # POST /users/1/skills.xml
   def create
-    @skill = current_user.skills.new(params[:skill])
+    @saved_skills, @unsaved_skills = [], []
+    Skill.parse(params[:skills]).each do |skill|
+      s = Skill.new(:name => skill, :user => current_user)
+      begin
+        s.save!
+        @saved_skills << skill
+      rescue
+        @unsaved_skills << skill
+      end
+    end
 
     respond_to do |format|
-      if @skill.save
-        flash[:notice] = 'Skill was successfully created.'
+      if @saved_skills.size > 0
+        flash[:notice] = "Skills successfully created: #{@saved_skills.join(', ')}"
+        unless @unsaved_skills.empty?
+          flash[:warning] = "Couldn't save the following skills: #{@unsaved_skills.join(', ')}"
+        end
         format.html { redirect_to(user_skills_path(current_user)) }
-        format.xml  { render :xml => @skill, :status => :created, :location => @skill }
+        format.xml  { render :xml => @saved_skills, :status => :created }
       else
+        flash[:error] = "Couldn't save the following skills: #{@unsaved_skills.join(', ')}"
         format.html { render :action => "new" }
-        format.xml  { render :xml => @skill.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @unsaved_skills, :status => :unprocessable_entity }
       end
     end
   end

@@ -28,12 +28,12 @@ class Skill < ActiveRecord::Base
     # parse and compile the skills
     all_skills = []
     [summary_skills, interest_skills].each do |items|
-      all_skills |= self.parse_skills items.inner_html
+      all_skills |= self.parse items.inner_html
     end
     all_skills
   end
   
-  def self.parse_skills(html)
+  def self.parse(html)
     # break up HTML into logical array items
     skills = html.gsub(/\n/, '').split(/,|\+|<br>|<br \/>/)
     

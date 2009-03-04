@@ -1,15 +1,10 @@
-<h1>New skill</h1>
+<h1>add skills</h1>
 
-<% form_for [current_user, @skill] do |f| %>
-  <%= f.error_messages %>
-
+<% form_tag user_skills_path(current_user) do %>
   <p>
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
+    <%= text_area_tag :skills, @unsaved_skills.join(', '), :size => '40x10' %>
   </p>
   <p>
-    <%= f.submit "Create" %>
+    <%= submit_tag "Create" %>
   </p>
 <% end %>
-
-<%= link_to 'Back', user_skills_path(current_user) %>

@@ -3,7 +3,7 @@
 <%= linked_in_profile_widget(@user) %>
 
 <% if you? @user %>
-  <%= link_to 'New skill', new_user_skill_path(@user) %>
+  <%= link_to 'New skills', new_user_skill_path(@user) %>
 <% elsif your_friend? @user %>
   <%= link_to "Remove connection", unfriend_path(current_user, @user) %>
 <% else %>
