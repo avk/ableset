@@ -123,7 +123,7 @@ class SkillsController < ApplicationController
     end
     
     flash[:notice] = "Skills saved: " + saved.join(', ') unless saved.empty?
-    flash[:notice] = "Not saved: " + not_saved.join(', ') unless not_saved.empty?
+    flash[:error] = "Not saved: " + not_saved.join(', ') unless not_saved.empty?
     
     redirect_to user_skills_path(current_user)
   end
@@ -132,7 +132,8 @@ class SkillsController < ApplicationController
 protected
 
   def get_user
-    @user = (params[:user_id] == current_user.id) ? current_user : User.find(params[:user_id])
+    current_user_id = (logged_in?) ? current_user.id : 0
+    @user = (params[:user_id] == current_user_id) ? current_user : User.find(params[:user_id])
   end
 
 end
