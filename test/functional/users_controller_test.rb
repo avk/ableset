@@ -14,7 +14,7 @@ class UsersControllerTest < ActionController::TestCase
   def test_should_allow_signup
     assert_difference 'User.count' do
       create_user
-      assert_response :redirect
+      assert_redirected_to new_user_skill_path(User.find(:last))
     end
   end
 
