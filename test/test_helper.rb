@@ -38,7 +38,7 @@ class Test::Unit::TestCase
 
   def valid_options_for_skill
     valid_user = users(:quentin)
-    { :name => 'Ruby', :user => valid_user }
+    { :name => 'JRuby', :user => valid_user }
   end
 
   def create_skill(options={})

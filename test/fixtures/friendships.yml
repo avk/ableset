@@ -19,3 +19,8 @@ four:
   user: hubert
   friend: arthur
   approved: true  
+
+hubert_and_quentin:
+  user: hubert
+  friend: quentin
+  approved: true

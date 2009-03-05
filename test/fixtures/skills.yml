@@ -1,9 +1,9 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 ruby:
-  name: Java
+  name: Ruby
   user_id: 1
 
 rails:
-  name: C
+  name: Rails
   user_id: 2

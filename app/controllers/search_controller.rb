@@ -3,31 +3,28 @@ class SearchController < ApplicationController
   # GET /search/:query
   def search
     @query = params[:query]
-    @friend_skills, @group_skills, @location_skills = [], [], []
+    @friend_skills = []
     
-    if logged_in?
-      matches =  Skill.find(:all, :conditions => 
-        ["user_id != ? AND name LIKE ?", current_user.id, "%#{@query}%"], :include => [:user])
-    
-      friend_ids = current_user.friends.map(&:id)
-      
-      matches.each do |skill|
-        @friend_skills << matches.delete(skill) if friend_ids.include? skill.user_id
-        # @group_skills << matches.delete(skill) if group_ids.include? skill.user_id
-        # @location_skills << matches.delete(skill) if skill.user.location == current_user.location
-      end
-      @others = matches
+    if @query.blank?
+      flash[:warning] = "Please enter something to search for."
     else
-      @others = Skill.find(:all, :conditions => ["name LIKE ?", "%#{@query}%"], :include => [:user])
+      if logged_in?
+        matches =  Skill.find(:all, :conditions => 
+          ["user_id != ? AND name LIKE ?", current_user.id, "%#{@query}%"], :include => [:user])
+        
+        friend_ids = current_user.friends.map(&:id)
+        
+        matches.each do |skill|
+          @friend_skills << matches.delete(skill) if friend_ids.include? skill.user_id
+        end
+        @others = matches
+      else
+        @others = Skill.find(:all, :conditions => ["name LIKE ?", "%#{@query}%"], :include => [:user])
+      end
     end
     
     respond_to do |wants|
       wants.html # search.html.erb
-      # wants.js {
-      #   render :update do |page|
-      # 
-      #   end
-      # }
     end
   end
   

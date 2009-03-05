@@ -1,30 +1,34 @@
-<h1>
-  <%= @friend_skills.size + @others.size %> 
-  results for { <span style="color: #ff7b00"><%=h @query %></span> }
-</h1>
+<%- if @query.blank? -%>
+  <h1>0 results</h1>
+<%- else -%>
+  <h1>
+    <%= @friend_skills.size + @others.size %> 
+    results for { <span style="color: #ff7b00"><%=h @query %></span> }
+  </h1>
 
-<% unless @friend_skills.empty? %>
-<fieldset class="">
-  <legend>Connections</legend>
-  <ol>
-  <% @friend_skills.each do |skill| %>
-    <li>
-      <%= link_to h(skill.user.full_name), user_skills_path(skill.user) %>
-      on <%= link_to h(skill.name), user_skill_path(skill.user, skill) %>
-    </li>
+  <% unless @friend_skills.empty? %>
+  <fieldset class="">
+    <legend>Connections</legend>
+    <ol>
+    <% @friend_skills.each do |skill| %>
+      <li>
+        <%= link_to h(skill.user.full_name), user_skills_path(skill.user) %>
+        on <%= link_to h(skill.name), user_skill_path(skill.user, skill) %>
+      </li>
+    <% end -%>
+    </ol>
+  </fieldset>
   <% end -%>
-  </ol>
-</fieldset>
+
+  <fieldset class="">
+    <legend>Everyone else</legend>
+    <ol>
+    <% @others.each do |skill| %>
+      <li>
+        <%= link_to h(skill.user.full_name), user_skills_path(skill.user) %>
+        on <%= link_to h(skill.name), user_skill_path(skill.user, skill) %>
+      </li>
+    <% end -%>
+    </ol>
+  </fieldset>
 <% end -%>
-
-<fieldset class="">
-  <legend>Everyone else</legend>
-  <ol>
-  <% @others.each do |skill| %>
-    <li>
-      <%= link_to h(skill.user.full_name), user_skills_path(skill.user) %>
-      on <%= link_to h(skill.name), user_skill_path(skill.user, skill) %>
-    </li>
-  <% end -%>
-  </ol>
-</fieldset>
