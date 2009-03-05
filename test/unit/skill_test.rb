@@ -16,6 +16,23 @@ class SkillTest < ActiveSupport::TestCase
     end
   end
   
+  test 'should require unique names per user' do
+    assert_no_difference "Skill.count" do
+      skill = create_skill(:name => skills(:ruby).name, :user_id => skills(:ruby).user_id)
+      assert skill.errors.on(:name)
+    end
+  end
+  
+  test 'should judge if case-insensitive names are unique per user' do
+    duplicate = 'Jython on Grails'
+    assert_difference "Skill.count", 1 do
+      skill = create_skill(:name => duplicate)
+      assert !skill.new_record?, "#{skill.errors.full_messages.to_sentence}"
+      skill = create_skill(:name => duplicate.upcase)
+      assert skill.errors.on(:name)
+    end
+  end
+  
   test 'should require a user' do
     assert_no_difference "Skill.count" do
       skill = create_skill(:user => nil)
