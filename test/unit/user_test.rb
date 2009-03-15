@@ -134,26 +134,26 @@ class UserTest < ActiveSupport::TestCase
   ##### invite modification
   
   def test_invite_creation
-    assert no_relationship? users(:quentin), users(:aaron)
+    assert no_relationship?(users(:quentin), users(:aaron))
     users(:quentin).invite(users(:aaron))
     users(:quentin).reload
-    assert users(:quentin).invites_out.include? users(:aaron)
+    assert users(:quentin).invites_out.include?(users(:aaron))
   end
   
   def test_inviting_yourself
-    assert no_relationship? users(:quentin), users(:quentin)
+    assert no_relationship?(users(:quentin), users(:quentin))
     users(:quentin).invite(users(:quentin))
     users(:quentin).reload
     assert !(users(:quentin).invites_out.include? users(:quentin))
   end
   
   def test_should_not_invite_twice
-    assert no_relationship? @quentin, @aaron
+    assert no_relationship?(@quentin, @aaron)
     assert_difference "Friendship.count", 1 do
       @quentin.invite @aaron
-      assert @quentin.reload.invites_out.include? @aaron
+      assert @quentin.reload.invites_out.include?(@aaron)
       @quentin.invite @aaron
-      assert @quentin.reload.invites_out.include? @aaron
+      assert @quentin.reload.invites_out.include?(@aaron)
     end
   end
   

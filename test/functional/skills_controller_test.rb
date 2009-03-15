@@ -56,7 +56,7 @@ class SkillsControllerTest < ActionController::TestCase
     end
     
     assert_redirected_to user_skills_path(@user)
-    assert flash[:notice].match Regexp.new(skills.join(', '))
+    assert flash[:notice].match(Regexp.new(skills.join(', ')))
   end
   
   test "should create only valid skills if given a mix of new valid and invalid skills" do
@@ -67,8 +67,8 @@ class SkillsControllerTest < ActionController::TestCase
     end
     
     assert_redirected_to user_skills_path(@user)
-    assert flash[:notice].match Regexp.new(skills.uniq.join(', '))
-    assert flash[:warning].match Regexp.new(skills.dups.join(', '))
+    assert flash[:notice].match(Regexp.new(skills.uniq.join(', ')))
+    assert flash[:warning].match(Regexp.new(skills.dups.join(', ')))
   end
   
   test "should redirect back to new if not able to create any new skills" do
@@ -81,7 +81,7 @@ class SkillsControllerTest < ActionController::TestCase
       post :create, :skills => duplicates.join(', '), :user_id => @user.id
     end
     assert_template 'new'
-    assert flash[:error].match Regexp.new(duplicates.join(', '))
+    assert flash[:error].match(Regexp.new(duplicates.join(', ')))
     assert assigns(:unsaved_skills) == duplicates
   end
 
@@ -160,7 +160,7 @@ class SkillsControllerTest < ActionController::TestCase
       urls.each do |url|
         @request.env["HTTP_REFERER"] = ''
         post :new_from_linked_in, :user_id => @user.id, :public_profile => url
-        assert flash[:error].match Regexp.new(url)
+        assert flash[:error].match(Regexp.new(url))
       end
     end
   end
